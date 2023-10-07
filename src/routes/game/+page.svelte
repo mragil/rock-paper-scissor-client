@@ -2,9 +2,14 @@
 	interface Message {
 		type: 'INFO' | 'CHAT' | 'GAME' | 'OPPONENT' | 'TIMER' | 'RESULT' | 'RESET';
 		text: string;
+		data?: Game;
 	}
 
 	type Pick = 'Rock' | 'Paper' | 'Scissor';
+
+	interface Game {
+		[key: string]: Pick;
+	}
 
 	import { PUBLIC_WS_HOST } from '$env/static/public';
 	import Modal from '$lib/components/Modal.svelte';
@@ -18,9 +23,10 @@
 	let timer: string | null = null;
 	let isFinish: boolean = false;
 	let userPick: Pick | null = null;
+	let gameData: Game | undefined;
 
 	let opponentText: string | null = 'Waiting for your opponent...';
-	let opponent: string | null = null;
+	let opponent: string;
 	let infoText: string = '';
 	let winnerText: string = '';
 
@@ -49,6 +55,7 @@
 			if (message.type === 'RESULT') {
 				winnerText = message.text;
 				isFinish = true;
+				gameData = message.data;
 			}
 			if (message.type === 'INFO') {
 				infoText = message.text;
@@ -88,14 +95,18 @@
 		};
 		socket.send(JSON.stringify(msg));
 	};
-
-	$: console.log('modal idup: ', isFinish);
 </script>
 
 <div class="text-center py-10">
 	{#if wsEstablished}
 		<Modal bind:isOpen={isFinish} closeHandler={resetGame}>
 			<h1 slot="header" class="text-4xl">{showWinner(winnerText)}</h1>
+			<div class="my-5" slot="content">
+				{#if gameData}
+					<p>You pick: {gameData[name]}</p>
+					<p>{opponent} pick: {gameData[opponent]}</p>
+				{/if}
+			</div>
 			<button slot="button-action-footer" class="mx-auto my-auto w-20 text-black"
 				><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
 					><path
