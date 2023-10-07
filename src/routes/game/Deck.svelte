@@ -12,7 +12,9 @@
 
 <div class="flex items-center justify-center gap-5">
 	<button
-		class={`w-56 text-yellow-400 ${active === 'Scissor' && 'border-8 border-green-300 rounded-lg'}`}
+		class={`p-4 w-56 text-yellow-400 ${
+			active === 'Scissor' && 'border-8 border-red-700 rounded-full'
+		}`}
 		on:click={() => choosePick('Scissor')}
 		title="Scissor"
 	>
@@ -24,7 +26,13 @@
 		</svg>
 	</button>
 
-	<button class={`w-52 text-yellow-400 ${active === 'Paper' && 'border-8 border-green-300 rounded-lg'}`} on:click={() => choosePick('Paper')} title="Paper">
+	<button
+		class={`p-4 w-52 text-yellow-400 ${
+			active === 'Paper' && 'border-8 border-red-700 rounded-full'
+		}`}
+		on:click={() => choosePick('Paper')}
+		title="Paper"
+	>
 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"
 			><path
 				fill="currentColor"
@@ -33,7 +41,12 @@
 		</svg>
 	</button>
 
-	<button class={`w-52 text-yellow-400 ${active === 'Rock' && 'border-8 border-green-300 rounded-lg'}`} on:click={() => choosePick('Rock')} title="Rock"
+	<button
+		class={`p-4 w-52 text-yellow-400 ${
+			active === 'Rock' && 'border-8 border-red-700 rounded-full'
+		}`}
+		on:click={() => choosePick('Rock')}
+		title="Rock"
 		><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"
 			><path
 				fill="currentColor"
