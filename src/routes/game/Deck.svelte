@@ -2,7 +2,7 @@
 	type Pick = 'Rock' | 'Paper' | 'Scissor';
 
 	export let sendPick: (pick: Pick) => void;
-	let active: string = '';
+	export let  active: Pick | null = null;
 
 	const choosePick = (input: Pick) => {
 		active = input;
