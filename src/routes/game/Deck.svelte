@@ -10,7 +10,7 @@
 	};
 </script>
 
-<div class="flex items-center justify-center gap-5">
+<div class="flex items-center justify-center gap-5 overflow-hidden">
 	<button
 		class={`p-4 w-56 text-yellow-400 ${
 			active === 'Scissor' && 'border-8 border-red-700 rounded-full'

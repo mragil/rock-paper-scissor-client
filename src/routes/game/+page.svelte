@@ -55,7 +55,7 @@
 	};
 </script>
 
-<div class="text-center py-10">
+<div class="text-center py-10 mx-auto my-auto">
 	{#if wsEstablished}
 		<Modal bind:isOpen={isFinish} closeHandler={resetGame}>
 			<h1 slot="header" class="text-4xl">{showWinner(winner)}</h1>
