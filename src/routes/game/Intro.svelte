@@ -1,6 +1,6 @@
 <script lang="ts">
-	export let name: string;
-	export let room: string;
+	import { user } from '$lib/stores/user';
+
 	export let connectToRoom: () => void;
 </script>
 
@@ -20,7 +20,7 @@
 					class="w-full rounded-lg border-gray-500 border-b-8 p-4 pe-12 text-md bg-transparent"
 					placeholder="Enter your name"
 					required
-					bind:value={name}
+					bind:value={$user.name}
 				/>
 			</div>
 		</div>
@@ -34,7 +34,7 @@
 					class="w-full rounded-lg border-gray-500 border-b-8 p-4 pe-12 text-md bg-transparent"
 					placeholder="Enter room"
 					required
-					bind:value={room}
+					bind:value={$user.room}
 				/>
 			</div>
 		</div>

@@ -12,68 +12,32 @@
 	}
 
 	import { PUBLIC_WS_HOST } from '$env/static/public';
+
 	import Modal from '$lib/components/Modal.svelte';
 	import Deck from './Deck.svelte';
 	import Intro from './Intro.svelte';
 
-	let name: string;
-	let room: string;
+	import game from '$lib/stores/rock-paper-scissor';
+	import { user } from '$lib/stores/user';
+
 	let socket: WebSocket;
 	let wsEstablished: boolean = false;
-	let timer: string | null = null;
-	let isFinish: boolean = false;
-	let userPick: Pick | null = null;
-	let gameData: Game | undefined;
-
-	let opponentText: string | null = 'Waiting for your opponent...';
-	let opponent: string;
-	let infoText: string = '';
-	let winnerText: string = '';
+	$: ({ name, room } = $user);
+	$: ({ info, timer, gameData, isFinish, userPick, opponent, winner } = $game);
+	$: opponentText =
+		opponent === '' ? 'Waiting for your opponent...' : `Your opponent is ${opponent}`;
 
 	const connectToRoom = () => {
 		const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
 		socket = new WebSocket(
 			`${protocol}://${PUBLIC_WS_HOST}/chat?userName=${name}&roomName=${room}`
 		);
-		socket.addEventListener('open', (event) => {
-			wsEstablished = true;
-			console.log('[websocket] connection open', event);
-		});
-		socket.addEventListener('close', (event) => {
-			console.log('[websocket] connection closed', event);
-		});
-		socket.addEventListener('message', (event) => {
-			console.log('[websocket] message received', event);
-			const message: Message = JSON.parse(event.data);
-			if (message.type === 'OPPONENT') {
-				opponent = message.text;
-				opponentText = `${opponent} is still picking`;
-			}
-			if (message.type === 'TIMER') {
-				timer = message.text;
-			}
-			if (message.type === 'RESULT') {
-				winnerText = message.text;
-				isFinish = true;
-				gameData = message.data;
-			}
-			if (message.type === 'INFO') {
-				infoText = message.text;
-			}
-			if (message.type === 'REPLAY') {
-				opponentText = `Your opponent is ${opponent}`;
-				infoText = '';
-			}
-		});
+		game.connectToRoom(socket);
+		wsEstablished = true;
 	};
 
 	const sendPick = (pick: Pick) => {
-		userPick = pick;
-		const msg: Message = {
-			type: 'GAME',
-			text: pick
-		};
-		socket.send(JSON.stringify(msg));
+		game.sendPick(socket, pick);
 	};
 
 	const showWinner = (winner: string) => {
@@ -87,29 +51,22 @@
 	};
 
 	const resetGame = () => {
-		const msg: Message = {
-			type: 'RESET',
-			text: ''
-		};
-		opponentText = 'Waiting your opponent to replay...';
-		timer = null;
-		userPick = null;
-		socket.send(JSON.stringify(msg));
+		game.resetGame(socket);
 	};
 </script>
 
 <div class="text-center py-10">
 	{#if wsEstablished}
 		<Modal bind:isOpen={isFinish} closeHandler={resetGame}>
-			<h1 slot="header" class="text-4xl">{showWinner(winnerText)}</h1>
+			<h1 slot="header" class="text-4xl">{showWinner(winner)}</h1>
 			<div class="my-5" slot="content">
 				{#if gameData}
-					<p>You pick: {gameData[name] || 'Nothing 😢'}</p>
+					<p>You pick: {gameData[$user.name] || 'Nothing 😢'}</p>
 					<p>{opponent} pick: {gameData[opponent] || 'Nothing 😢'}</p>
 				{/if}
 			</div>
 			<div slot="button-action-footer">
-				{#if infoText === ''}
+				{#if info === ''}
 					<button class="mx-auto my-auto w-20 text-black"
 						><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
 							><path
@@ -119,10 +76,11 @@
 						>
 					</button>
 				{:else}
-					<h1 class="text-3xl">{infoText}</h1>
+					<h1 class="text-3xl">{info}</h1>
 				{/if}
 			</div>
 		</Modal>
+
 		{#if timer}
 			<div class="p-5 shadow-md rounded-full">
 				<h2 class="text-2xl">Timer: {timer}</h2>
@@ -135,7 +93,7 @@
 		</div>
 	{:else}
 		<div class="text-center py-20">
-			<Intro {connectToRoom} bind:name bind:room />
+			<Intro {connectToRoom} />
 		</div>
 	{/if}
 </div>
