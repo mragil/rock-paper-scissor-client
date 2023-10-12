@@ -1,10 +1,15 @@
 import { browser } from '$app/environment';
 import { writable } from 'svelte/store';
 
+interface Result {
+	game: Game;
+	score: Score;
+}
+
 interface Message {
 	type: 'INFO' | 'CHAT' | 'GAME' | 'OPPONENT' | 'TIMER' | 'RESULT' | 'RESET' | 'REPLAY';
 	text: string;
-	data?: Game;
+	data?: Result;
 }
 
 type Pick = 'Rock' | 'Paper' | 'Scissor';
@@ -13,11 +18,16 @@ interface Game {
 	[key: string]: Pick;
 }
 
+interface Score {
+	[key: string]: number;
+}
+
 type GameState = {
 	timer: string | null;
 	isFinish: boolean;
 	userPick: Pick | null;
-	gameData: Game | undefined;
+	gameData: Game;
+	scores: Score;
 	opponent: string;
 	winner: string;
 	info: string;
@@ -30,8 +40,9 @@ const store = () => {
 		userPick: null,
 		opponent: '',
 		winner: '',
-		gameData: undefined,
-		info: '',
+		gameData: {},
+		scores: {},
+		info: ''
 	};
 
 	const { update, subscribe } = writable(gameState);
@@ -58,7 +69,8 @@ const store = () => {
 						...state,
 						isFinish: true,
 						winner: message.text,
-						gameData: message.data
+						gameData: message.data!.game,
+						scores: message.data!.score
 					}));
 				}
 				if (message.type === 'INFO') {

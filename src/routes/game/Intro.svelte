@@ -17,7 +17,7 @@
 			<div class="relative">
 				<input
 					type="text"
-					class="w-full rounded-lg border-gray-500 border-b-8 p-4 pe-12 text-md bg-transparent"
+					class="w-full md:w-96 rounded-lg border-gray-500 border-b-8 p-4 pe-12 text-md bg-transparent"
 					placeholder="Enter your name"
 					required
 					bind:value={$user.name}
@@ -31,7 +31,7 @@
 			<div class="relative">
 				<input
 					type="text"
-					class="w-full rounded-lg border-gray-500 border-b-8 p-4 pe-12 text-md bg-transparent"
+					class="w-full md:w-96 rounded-lg border-gray-500 border-b-8 p-4 pe-12 text-md bg-transparent"
 					placeholder="Enter room"
 					required
 					bind:value={$user.room}

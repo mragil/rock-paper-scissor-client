@@ -1,14 +1,22 @@
 <script lang="ts">
+	interface Result {
+		game: Game;
+		score: Score;
+	}
 	interface Message {
 		type: 'INFO' | 'CHAT' | 'GAME' | 'OPPONENT' | 'TIMER' | 'RESULT' | 'RESET' | 'REPLAY';
 		text: string;
-		data?: Game;
+		data?: Result;
 	}
 
 	type Pick = 'Rock' | 'Paper' | 'Scissor';
 
 	interface Game {
 		[key: string]: Pick;
+	}
+
+	interface Score {
+		[key: string]: number;
 	}
 
 	import { PUBLIC_WS_HOST } from '$env/static/public';
@@ -23,7 +31,7 @@
 	let socket: WebSocket;
 	let wsEstablished: boolean = false;
 	$: ({ name, room } = $user);
-	$: ({ info, timer, gameData, isFinish, userPick, opponent, winner } = $game);
+	$: ({ info, timer, gameData, isFinish, userPick, opponent, winner, scores } = $game);
 	$: opponentText =
 		opponent === '' ? 'Waiting for your opponent...' : `Your opponent is ${opponent}`;
 
@@ -81,15 +89,17 @@
 			</div>
 		</Modal>
 
-		{#if timer}
-			<div class="p-5 shadow-md rounded-full">
-				<h2 class="text-2xl">Timer: {timer}</h2>
-			</div>
-		{/if}
-		<div class="grid grid-rows-3 gap-5 text-4xl items-center">
-			<h1 class="">{opponentText}</h1>
+		<div class="grid grid-rows-2 gap-8 place-content-center text-4xl">
+			{#if timer}
+				<div class="p-5 shadow-md rounded-md">
+					<h2>Timer: {timer}</h2>
+				</div>
+			{/if}
+			<h1>{opponentText}</h1>
+			<h2>Score: {scores[opponent] || 0}</h2>
 			<Deck {sendPick} active={userPick} />
 			<h1>{userPick ? `You Choose ${userPick}` : 'Your Turn'}</h1>
+			<h2>Score: {scores[name] || 0}</h2>
 		</div>
 	{:else}
 		<div class="text-center py-20">
