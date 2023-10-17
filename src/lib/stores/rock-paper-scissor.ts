@@ -31,6 +31,7 @@ type GameState = {
 	opponent: string;
 	winner: string;
 	info: string;
+	isConnected: boolean;
 };
 
 const store = () => {
@@ -42,7 +43,8 @@ const store = () => {
 		winner: '',
 		gameData: {},
 		scores: {},
-		info: ''
+		info: '',
+		isConnected: false
 	};
 
 	const { update, subscribe } = writable(gameState);
@@ -50,9 +52,11 @@ const store = () => {
 	const connectToRoom = (socket: WebSocket) => {
 		if (browser) {
 			socket.addEventListener('open', (event) => {
+				update((state) => ({ ...state, isConnected: true }));
 				console.log('[websocket] connection open', event);
 			});
 			socket.addEventListener('close', (event) => {
+				update((state) => ({ ...state, isConnected: false }));
 				console.log('[websocket] connection closed', event);
 			});
 			socket.addEventListener('message', (event) => {

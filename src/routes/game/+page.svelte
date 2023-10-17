@@ -29,9 +29,8 @@
 	import { user } from '$lib/stores/user';
 
 	let socket: WebSocket;
-	let wsEstablished: boolean = false;
 	$: ({ name, room } = $user);
-	$: ({ info, timer, gameData, isFinish, userPick, opponent, winner, scores } = $game);
+	$: ({ isConnected, info, timer, gameData, isFinish, userPick, opponent, winner, scores } = $game);
 	$: opponentText =
 		opponent === '' ? 'Waiting for your opponent...' : `Your opponent is ${opponent}`;
 
@@ -41,7 +40,6 @@
 			`${protocol}://${PUBLIC_WS_HOST}/chat?userName=${name}&roomName=${room}`
 		);
 		game.connectToRoom(socket);
-		wsEstablished = true;
 	};
 
 	const sendPick = (pick: Pick) => {
@@ -64,7 +62,7 @@
 </script>
 
 <div class="text-center py-10 mx-auto my-auto">
-	{#if wsEstablished}
+	{#if isConnected}
 		<Modal bind:isOpen={isFinish} closeHandler={resetGame}>
 			<h1 slot="header" class="text-4xl">{showWinner(winner)}</h1>
 			<div class="my-5" slot="content">
