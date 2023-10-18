@@ -20,6 +20,7 @@
 	}
 
 	import { PUBLIC_WS_HOST } from '$env/static/public';
+	import { slide } from 'svelte/transition';
 
 	import Modal from '$lib/components/Modal.svelte';
 	import Deck from './Deck.svelte';
@@ -87,17 +88,19 @@
 			</div>
 		</Modal>
 
-		<div class="grid grid-rows-2 gap-8 place-content-center text-4xl">
+		<div class="text-4xl">
 			{#if timer}
-				<div class="p-5 shadow-md rounded-md">
+				<div class="p-5 shadow-md rounded-md mb-8" transition:slide={{}}>
 					<h2>Timer: {timer}</h2>
 				</div>
 			{/if}
-			<h1>{opponentText}</h1>
-			<h2>Score: {scores[opponent] || 0}</h2>
-			<Deck {sendPick} active={userPick} />
-			<h1>{userPick ? `You Choose ${userPick}` : 'Your Turn'}</h1>
-			<h2>Score: {scores[name] || 0}</h2>
+			<div class="grid grid-rows-2 gap-8 place-content-center" transition:slide={{}}>
+				<h1>{opponentText}</h1>
+				<h2>Score: {scores[opponent] || 0}</h2>
+				<Deck {sendPick} active={userPick} />
+				<h1>{userPick ? `You Choose ${userPick}` : 'Your Turn'}</h1>
+				<h2>Score: {scores[name] || 0}</h2>
+			</div>
 		</div>
 	{:else}
 		<div class="text-center py-20">
