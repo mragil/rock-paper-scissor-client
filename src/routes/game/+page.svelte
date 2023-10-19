@@ -95,7 +95,7 @@
 				</div>
 			{/if}
 			<div class="grid grid-rows-2 gap-8 place-content-center" transition:slide={{}}>
-				<h1>{opponentText}</h1>
+				<h1 class={opponent ? '' : 'animate-bounce'}>{opponentText}</h1>
 				<h2>Score: {scores[opponent] || 0}</h2>
 				<Deck {sendPick} active={userPick} />
 				<h1>{userPick ? `You Choose ${userPick}` : 'Your Turn'}</h1>

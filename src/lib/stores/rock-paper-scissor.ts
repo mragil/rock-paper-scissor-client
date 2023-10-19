@@ -7,7 +7,16 @@ interface Result {
 }
 
 interface Message {
-	type: 'INFO' | 'CHAT' | 'GAME' | 'OPPONENT' | 'TIMER' | 'RESULT' | 'RESET' | 'REPLAY';
+	type:
+		| 'INFO'
+		| 'CHAT'
+		| 'GAME'
+		| 'OPPONENT'
+		| 'TIMER'
+		| 'RESULT'
+		| 'RESET'
+		| 'REPLAY'
+		| 'OPPONENT-LEFT';
 	text: string;
 	data?: Result;
 }
@@ -82,6 +91,28 @@ const store = () => {
 				}
 				if (message.type === 'REPLAY') {
 					update((state) => ({ ...state, info: '', isFinish: false }));
+				}
+				if (message.type === 'OPPONENT-LEFT') {
+					update((state) => {
+						const updatedGameData = { ...state.gameData };
+						delete updatedGameData[state.opponent];
+
+						const updatedScores = { ...state.scores };
+						delete updatedScores[state.opponent];
+						updatedScores[Object.keys(updatedScores)[0]] = 0;
+
+						return {
+							...state,
+							timer: null,
+							isFinish: false,
+							userPick: null,
+							opponent: '',
+							winner: '',
+							gameData: updatedGameData,
+							scores: updatedScores,
+							info: ''
+						};
+					});
 				}
 			});
 		}
