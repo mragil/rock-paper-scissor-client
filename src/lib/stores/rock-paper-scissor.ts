@@ -16,7 +16,8 @@ interface Message {
 		| 'RESULT'
 		| 'RESET'
 		| 'REPLAY'
-		| 'OPPONENT-LEFT';
+		| 'OPPONENT-LEFT'
+		| 'PLAYER_TURN';
 	text: string;
 	data?: Result;
 }
@@ -65,7 +66,7 @@ const store = () => {
 				console.log('[websocket] connection open', event);
 			});
 			socket.addEventListener('close', (event) => {
-				update((state) => ({ ...state, isConnected: false }));
+				update(() => gameState);
 				console.log('[websocket] connection closed', event);
 			});
 			socket.addEventListener('message', (event) => {
@@ -121,7 +122,7 @@ const store = () => {
 	const sendPick = (socket: WebSocket, pick: Pick) => {
 		update((state) => ({ ...state, userPick: pick }));
 		const msg: Message = {
-			type: 'GAME',
+			type: 'PLAYER_TURN',
 			text: pick
 		};
 		socket.send(JSON.stringify(msg));
@@ -129,7 +130,7 @@ const store = () => {
 
 	const resetGame = (socket: WebSocket) => {
 		const msg: Message = {
-			type: 'RESET',
+			type: 'REPLAY',
 			text: ''
 		};
 		update((state) => ({ ...state, userPick: null, timer: null }));

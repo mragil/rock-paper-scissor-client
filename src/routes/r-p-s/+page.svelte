@@ -38,7 +38,7 @@
 	const connectToRoom = () => {
 		const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
 		socket = new WebSocket(
-			`${protocol}://${PUBLIC_WS_HOST}/chat?userName=${name}&roomName=${room}`
+			`${protocol}://${PUBLIC_WS_HOST}/rock-paper-scissor?userName=${name}&roomName=${room}`
 		);
 		game.connectToRoom(socket);
 	};
