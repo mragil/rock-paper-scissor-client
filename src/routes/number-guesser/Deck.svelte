@@ -3,17 +3,30 @@
 	export let maxRange: number;
 	let numberGuessed: number;
 	export let sendGuess: (guess: number) => void;
+
+	const isValidGuess = () => {
+		if (numberGuessed > maxRange || numberGuessed < minRange) {
+			return false;
+		}
+		return true;
+	};
 </script>
 
-<div
-	class="flex items-center justify-center gap-5 overflow-hidden"
->
+{#if !isValidGuess}
+	<p>You must guess number between {minRange} - {maxRange}</p>
+{/if}
+
+<div class="flex flex-col gap-5 items-center">
 	<input
+		class="w-24 aspect-square rounded-md text-center"
 		type="number"
 		name="number-guessed"
-		min={minRange + 1}
-		max={maxRange - 1}
 		bind:value={numberGuessed}
 	/>
-	<button on:click={() => sendGuess(numberGuessed)}>Guess</button>
+	<button
+		class="aspect-square w-fit p-1 border-4 rounded-full border-black"
+		on:click={() => {
+			sendGuess(numberGuessed);
+		}}>Guess</button
+	>
 </div>

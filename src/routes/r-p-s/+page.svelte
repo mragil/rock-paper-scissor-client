@@ -62,6 +62,10 @@
 	};
 </script>
 
+<svelte:head>
+    <title>Rock Paper Scissor</title> 
+</svelte:head>
+
 <div class="text-center py-10 mx-auto my-auto">
 	{#if isConnected}
 		<Modal bind:isOpen={isFinish} closeHandler={resetGame}>

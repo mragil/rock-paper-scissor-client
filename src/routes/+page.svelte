@@ -4,8 +4,11 @@
 	</h1>
 	<p class="mt-6 text-lg leading-8 text-gray-600">All Projects built with SvelteKit</p>
 	<div class="mt-10 flex items-center justify-center gap-x-6">
-		<a href="/game" class="text-base font-semibold leading-7 text-gray-900"
+		<a href="/r-p-s" class="text-base font-semibold leading-7 text-gray-900"
 			>Rock Paper Scissor <span aria-hidden="true">→</span></a
+		>
+		<a href="/number-guesser" class="text-base font-semibold leading-7 text-gray-900"
+			>Number Guesser <span aria-hidden="true">→</span></a
 		>
 	</div>
 </div>

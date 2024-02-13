@@ -71,7 +71,11 @@
 	};
 </script>
 
-<div class="text-center py-10 mx-auto my-auto">
+<svelte:head>
+	<title>Number Guesser</title>
+</svelte:head>
+
+<div class="h-fit p-5 text-center mx-auto my-auto">
 	{#if isConnected}
 		<Modal bind:isOpen={isFinish} closeHandler={resetGame}>
 			<h1 slot="header" class="text-4xl">{showWinner(winner)}</h1>
